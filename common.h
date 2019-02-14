@@ -8,8 +8,10 @@
 #include <map>
 #include <vector>
 #include <set>
-#include <assert>
+#include <cassert>
 #include <utility>
+#include <bitset>
+#include <cstdint>
 
 using namespace std;
 

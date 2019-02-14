@@ -111,5 +111,74 @@ FA FA::Closet(const FA &a) {
 	return c;
 }
 
-FA NtoD() {
+void FA::genMapFromAddressToIndex() {
+	mpa2i.clear();
+	for(size_t i = 0; i < states.size(); i++)
+		mpa2i[states[i]] = i;
+}
+
+void FA::extend(MyBitSet &st, const State *s, string label) {
+	MyBitSet tmp; // tmp BitSet to store the states
+	queue<State*> q;
+	q.push(s); tmp.set(mpa2i[s]);
+
+	while(!q.empty()) {
+		State *tt = q.front(); q.pop();
+		for(auto &e: tt -> trans) {
+			if (e.label == label) {
+				if(!tmp[mpa2i[e.to]]) {
+					q.push(e.to);
+					tmp.set(mpa2i[e.to]);
+				}
+			}
+		}
+	}
+
+	st = st | tmp;
+}
+
+void FA::collectPossibleLabel(const MyBitSet &st, set<string> &pls) {
+	pls.clear();
+	for (size_t i = 0; i < states.size(); i++) if (st[i]) {
+			for (auto e: states[i] -> trans) {
+				if (!pls.count(e.label)) pls.insert(e.label);
+			}
+	}
+}
+
+MyBitSet FA::transFromSet(const MyBitSet &st, string label) {
+	MyBitSet nxt(states.size());
+	for (size_t i = 0; i < states.size(); i++) if(st[i]) {
+		for (auto e: states[i] -> trans) if (e.label == label) {
+			if (!nxt.count(mpa2i[e.to])) {
+				nxt.set(mpa2i[e.to]);
+				extend(nxt, e.to, "");
+			}
+		}
+	}
+	return nxt;
+}
+
+FA FA::NtoD() {
+	// DS for bfs
+	set<MyBitSet> st;
+	queue<MyBitSet> q;
+	FA dfa(FAType::DFA);
+
+	// map address to array index
+	genMapFromAddressToIndex();
+
+	// initial start state
+	MyBitSet s(states.size());
+	s.Set(mpa2i[start]); extend(s, start, ""); // get the initial state
+	q.push(s); st.insert(s);
+
+	// bfs
+	while (!q.empty()) {
+		MyBitSet tt = q.front(); q.pop();
+		set<string> pls; // possible label set
+		collectPossibleLabel(tt, pls);
+		for (auto label: pls) {
+		}
+	}
 }
