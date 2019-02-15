@@ -22,7 +22,7 @@ int RegExp::matchAtPoint(string str, size_t point) {
 	int ret;
 	State *cur = dfa.start;
 	for (ret = point; ret < str.length(); ++ret) {
-		cur = dfa.Next(cur, str[ret]);
+		cur = dfa.Next(cur, string() + str[ret]);
 		if (cur == NULL) return point-1;
 		if (cur -> type == StateType::accept) return ret;
 	}
@@ -48,7 +48,7 @@ FA RegExp::regExp2() {
 	for (; pt + 1 < exp.length(); ++pt) {
 		if (!lFlag && exp[pt] == '\\' && exp[pt+1] == '(') {
 			lFlag = true;
-			left = RegExp3();
+			left = regExp3();
 		} else if (!lFlag && exp[pt] == '\\' && exp[pt+1] == '[') {
 			lFlag = true;
 			left = charSetExp();

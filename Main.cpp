@@ -1,5 +1,5 @@
 #include "RegExp.h"
-#include "Common.h"
+#include "common.h"
 
 void printsub(string str, int begin, int end) {
 	for (int i = begin; i <= end; i++)  {

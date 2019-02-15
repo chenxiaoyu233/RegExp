@@ -5,11 +5,10 @@
 class State;
 
 class Edge {
-private:
+ public:
 	string label;
 	State *from, *to;
 
-public:
 	Edge();
 	Edge(string label, State *from, State *to);
 };

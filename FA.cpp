@@ -35,8 +35,8 @@ FA::FA(const FA &other, bool isFree): isFree(isFree) {
 	// rebuild all the edges
 	for (auto e: edges) {
 		State *from = states[e.second.first], *to = states[e.second.second];
-		string label = states[e.first];
-		(from -> trans).push_back(label, from, to);
+		string label = e.first;
+		(from -> trans).push_back(Edge(label, from, to));
 	}
 }
 
@@ -47,12 +47,12 @@ FA::~FA() {
 	}
 }
 
-FA FA::operator + (const FA &a, const FA &b) {
-	return Concat(a, b);
+FA FA::operator + (const FA &other) {
+	return Concat(*this, other);
 }
 
-FA FA::operator | (const FA &a, const FA &b) {
-	return Union(a, b);
+FA FA::operator | (const FA &other) {
+	return Union(*this, other);
 }
 
 FA FA::Concat(const FA &a, const FA &b) {
@@ -117,10 +117,10 @@ void FA::genMapFromAddressToIndex() {
 		mpa2i[states[i]] = i;
 }
 
-void FA::extend(MyBitSet &st, const State *s, string label) {
-	MyBitSet tmp; // tmp BitSet to store the states
+void FA::extend(MyBitSet &st, State *s, string label) {
+	MyBitSet tmp(states.size()); // tmp BitSet to store the states
 	queue<State*> q;
-	q.push(s); tmp.set(mpa2i[s]);
+	q.push(s); tmp.Set(mpa2i[s]);
 
 	while(!q.empty()) {
 		State *tt = q.front(); q.pop();
@@ -128,7 +128,7 @@ void FA::extend(MyBitSet &st, const State *s, string label) {
 			if (e.label == label) {
 				if(!tmp[mpa2i[e.to]]) {
 					q.push(e.to);
-					tmp.set(mpa2i[e.to]);
+					tmp.Set(mpa2i[e.to]);
 				}
 			}
 		}
@@ -150,8 +150,8 @@ MyBitSet FA::transFromSet(const MyBitSet &st, string label) {
 	MyBitSet nxt(states.size());
 	for (size_t i = 0; i < states.size(); i++) if(st[i]) {
 		for (auto e: states[i] -> trans) if (e.label == label) {
-			if (!nxt.count(mpa2i[e.to])) {
-				nxt.set(mpa2i[e.to]);
+			if (!nxt[mpa2i[e.to]]) {
+				nxt.Set(mpa2i[e.to]);
 				extend(nxt, e.to, "");
 			}
 		}
@@ -183,13 +183,13 @@ FA FA::NtoD() {
 		collectPossibleLabel(tt, pls);
 		for (auto label: pls) {
 			MyBitSet nxtBS = transFromSet(tt, label);
-			if (!mp.count(nexBS)) {
+			if (!mp.count(nxtBS)) {
 				State *tmp = new State(StateType::normal);
-				mp[nextBS] = tmp;
+				mp[nxtBS] = tmp;
 				dfa.states.push_back(tmp);
-				q.push(nextBS);
+				q.push(nxtBS);
 			}
-			(mp[tt] -> trans).push_back(Edge(mp[tt], mp[nextBS], label));
+			(mp[tt] -> trans).push_back(Edge(label, mp[tt], mp[nxtBS]));
 		}
 	}
 
@@ -217,7 +217,7 @@ FA FA::CharSetNFA(string chars) {
 	fa.accept.push_back(acc);
 
 	for (size_t i = 0; i < chars.length(); i++) {
-		(fa.start -> trans).push_back(fa.start, acc, string(chars[i]));
+		(fa.start -> trans).push_back(Edge(string() + chars[i], fa.start, acc));
 	}
 
 	return fa;

@@ -1,6 +1,7 @@
 cmake_minimum_required (VERSION 2.6)
 project (Rexp)
 
+set (CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
 aux_source_directory (. source_list)
 add_executable (Rexp ${source_list})
 

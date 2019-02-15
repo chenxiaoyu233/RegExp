@@ -6,14 +6,14 @@
 class MyBitSet {
 private:
 	size_t WordNum;
-	uint_64 *field;
-	const static uint_64 mask = 63;
+	uint64_t *field;
+	const static uint64_t mask = 63;
 public:
 	MyBitSet(size_t BitNum);
 	MyBitSet(const MyBitSet& other);
 	~MyBitSet();
-	bool operator [] (size_t idx);
-	bool operator < (const MyBitSet &other);
+	bool operator [] (size_t idx) const;
+	bool operator < (const MyBitSet &other) const;
 	bool operator == (const MyBitSet &other);
 	MyBitSet operator | (const MyBitSet &other);
 	MyBitSet operator & (const MyBitSet &other);

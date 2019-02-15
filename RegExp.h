@@ -23,6 +23,7 @@ private:
 	FA regExp2();
 	FA regExp3();
 	pair<int, int> rangeExp();
+	int numExp();
 	FA charSetExp();
 	int matchAtPoint(string str, size_t point);
 public:
