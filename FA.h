@@ -28,6 +28,7 @@ private:
 
 	// calc transformation from a set of states with a label
 	MyBitSet transFromSet(const MyBitSet &st, string label);
+	
 public:
 	FA(FAType type, bool isFree = true);
 	FA(const FA &other, bool isFree = true);
@@ -35,9 +36,12 @@ public:
 	static FA Concat(const FA &a,const FA &b);
 	static FA Union(const FA &a, const FA &b);
 	static FA Closet(const FA &a);
-	friend FA operator - (const FA &a, const FA &b); // concat
-	friend FA operator + (const FA &a, const FA &b); // union
+	static FA CharSetNFA(string chars);
+	static FA EmptyStr();
+	friend FA operator + (const FA &a, const FA &b); // concat
+	friend FA operator | (const FA &a, const FA &b); // union
 	FA NtoD(); // convert NFA to DFA
+	State* Next(State* cur, string label);
 };
 
 #endif

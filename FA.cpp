@@ -47,11 +47,11 @@ FA::~FA() {
 	}
 }
 
-FA FA::operator - (const FA &a, const FA &b) {
+FA FA::operator + (const FA &a, const FA &b) {
 	return Concat(a, b);
 }
 
-FA FA::operator + (const FA &a, const FA &b) {
+FA FA::operator | (const FA &a, const FA &b) {
 	return Union(a, b);
 }
 
@@ -161,9 +161,9 @@ MyBitSet FA::transFromSet(const MyBitSet &st, string label) {
 
 FA FA::NtoD() {
 	// DS for bfs
-	set<MyBitSet> st;
 	queue<MyBitSet> q;
 	FA dfa(FAType::DFA);
+	map<MyBitSet, State*> mp;
 
 	// map address to array index
 	genMapFromAddressToIndex();
@@ -171,7 +171,10 @@ FA FA::NtoD() {
 	// initial start state
 	MyBitSet s(states.size());
 	s.Set(mpa2i[start]); extend(s, start, ""); // get the initial state
-	q.push(s); st.insert(s);
+	q.push(s);
+	dfa.start = new State(StateType::normal);
+	dfa.states.push_back(dfa.start);
+	mp[s] = dfa.start;
 
 	// bfs
 	while (!q.empty()) {
@@ -179,6 +182,58 @@ FA FA::NtoD() {
 		set<string> pls; // possible label set
 		collectPossibleLabel(tt, pls);
 		for (auto label: pls) {
+			MyBitSet nxtBS = transFromSet(tt, label);
+			if (!mp.count(nexBS)) {
+				State *tmp = new State(StateType::normal);
+				mp[nextBS] = tmp;
+				dfa.states.push_back(tmp);
+				q.push(nextBS);
+			}
+			(mp[tt] -> trans).push_back(Edge(mp[tt], mp[nextBS], label));
 		}
 	}
+
+	// handle the accept states
+	for (auto &p: mp) {
+		bool isAccept = false;
+		for (auto sp: accept) if (p.first[mpa2i[sp]]) {
+			isAccept = true;
+			break;
+		}
+		if (isAccept) {
+			p.second -> type = StateType::accept;
+			dfa.accept.push_back(p.second);
+		}
+	}
+	
+	return dfa;
+}
+
+FA FA::CharSetNFA(string chars) {
+	FA fa(FAType::NFA);
+	fa.start = new State(StateType::normal);
+	fa.states.push_back(fa.start);
+	State *acc = new State(StateType::accept);
+	fa.accept.push_back(acc);
+
+	for (size_t i = 0; i < chars.length(); i++) {
+		(fa.start -> trans).push_back(fa.start, acc, string(chars[i]));
+	}
+
+	return fa;
+}
+
+FA FA::EmptyStr() {
+	FA fa(FAType::NFA);
+	fa.start = new State(StateType::accept);
+	fa.accept.push_back(fa.start);
+	fa.states.push_back(fa.start);
+	return fa;
+}
+
+State* FA::Next(State* cur, string label) {
+	for (auto e: cur -> trans) if (e.label == label) {
+		return e.to;
+	}
+	return NULL;
 }
