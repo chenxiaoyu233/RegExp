@@ -3,6 +3,31 @@
 #define HandleSpace \
 else if (exp[pt] != ' ' && exp[pt] != '	' && exp[pt] != '\n') {}
 	
+RegExp::RegExp(string exp): exp(exp), dfa(FAType::DFA) {
+	pt = 0;
+	FA nfa(regExp1());
+	dfa = nfa.NtoD();
+}
+
+vector<pair<int, int> > RegExp::Match(string str){
+	vector<pair<int, int> > ret;
+	for (size_t i = 0; i < str.length(); i++) {
+		int cur = matchAtPoint(str, i);
+		if (cur >= i) ret.push_back(make_pair(i, cur));
+	}
+	return ret;
+}
+
+int RegExp::matchAtPoint(string str, size_t point) {
+	int ret;
+	State *cur = dfa.start;
+	for (ret = point; ret < str.length(); ++ret) {
+		cur = dfa.Next(cur, str[ret]);
+		if (cur == NULL) return point-1;
+		if (cur -> type == StateType::accept) return ret;
+	}
+	return point-1;
+}
 
 FA RegExp::regExp1() {
 	FA left = regExp2();

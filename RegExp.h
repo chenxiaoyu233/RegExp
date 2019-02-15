@@ -24,8 +24,10 @@ private:
 	FA regExp3();
 	pair<int, int> rangeExp();
 	FA charSetExp();
+	int matchAtPoint(string str, size_t point);
 public:
 	RegExp(string exp);
+	vector<pair<int, int> > Match(string str);
 };
 
 #endif
