@@ -9,7 +9,7 @@ void printsub(string str, int begin, int end) {
 }
 
 void test() {
-	string rexp = "\[ab\]\{2, 3\}";
+	string rexp = "\\[ab\\]\\{2, 3\\}";
 	string text = "abcababcdefabababefacb";
 	RegExp matcher(rexp);
 	auto ret = matcher.Match(text);
