@@ -140,9 +140,9 @@ void FA::extend(MyBitSet &st, State *s, string label) {
 void FA::collectPossibleLabel(const MyBitSet &st, set<string> &pls) {
 	pls.clear();
 	for (size_t i = 0; i < states.size(); i++) if (st[i]) {
-			for (auto e: states[i] -> trans) {
-				if (!pls.count(e.label)) pls.insert(e.label);
-			}
+		for (auto e: states[i] -> trans) {
+			if (!pls.count(e.label)) pls.insert(e.label);
+		}
 	}
 }
 
