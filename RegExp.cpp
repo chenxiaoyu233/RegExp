@@ -131,7 +131,7 @@ FA RegExp::charSetExp () {
 	bool inner = false;
 	for (; pt+1 < exp.length(); ++pt) {
 		if (!inner && (exp[pt] == ' ' || exp[pt] == '	' || exp[pt] == '\n')) {
-		} else if (!inner && exp[pt] == '\\' & exp[pt] == '[') {
+		} else if (!inner && exp[pt] == '\\' & exp[pt+1] == '[') {
 			inner = true;
 			++pt;
 		} else if (inner && (exp[pt] != '\\' || exp[pt+1] != ']')) {
