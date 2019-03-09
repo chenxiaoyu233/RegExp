@@ -7,6 +7,7 @@ State::State(StateType type) {
 
 State::State(const State &other) {
 	type = other.type;
+	info = other.info;
 	trans.clear();
 }
 
