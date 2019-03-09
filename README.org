@@ -1,1 +1,22 @@
 * Summary
+  This is a toy model for regular expression.
+
+* How it works
+  These classes construct regular expression using a very simple way.
+
+** Formal definition for regular language
+   - any single letter, empty string $\epsilon$, $\emptyset$ are regular language.
+   - The *kleene Closure* of any regular language is regular language.
+   - The *Union* of any regular language is regular language.
+   - The *ConCat* of any regular language is regular language.
+
+** How to implement a finite automata to recognize the regular expression.
+*** Using NFA to simulate the union of the regular language
+	[[./img/union.png]]
+*** Using NFA to simulate the concat of the regular language
+	[[./img/concat.png]]
+*** Using NFA to simulate the kleene closure of the regular language
+	[[./img/kleene.png]]
+
+  After the steps above, we just need to implement a bfs to convert the NFA to DFA.
+	
