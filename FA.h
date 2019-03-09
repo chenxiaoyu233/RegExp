@@ -30,7 +30,9 @@ public:
 	MyBitSet transFromSet(const MyBitSet &st, string label);
 	
 	FA(FAType type, bool isFree = true);
+    void copyFrom(const FA &other);
 	FA(const FA &other, bool isFree = true);
+    void operator = (const FA &other);
 	~FA();
 	static FA Concat(const FA &a,const FA &b);
 	static FA Union(const FA &a, const FA &b);

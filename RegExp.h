@@ -4,7 +4,9 @@
 #include "common.h"
 #include "FA.h"
 
-// <RegExp1> ::= <RegExp2> "\|" <RegExp1> |
+// <RegExp1> ::= <RegExp+> "\|" <RegExp1> |
+//               <RegExp+>
+// <RegExp+> ::= <RegExp2> "\+" <RegExp+> |
 //               <RegExp2>
 // <RegExp2> ::= <CharSetExp> "\{" <RangeExp> "\}" |
 //               <RegExp3> "\{" <RangeExp> "\}" |
@@ -20,6 +22,7 @@ private:
 	string exp;
 	size_t pt;
 	FA regExp1();
+    FA regExpCat();
 	FA regExp2();
 	FA regExp3();
 	pair<int, int> rangeExp();

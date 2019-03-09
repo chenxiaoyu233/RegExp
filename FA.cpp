@@ -5,39 +5,47 @@ FA::FA(FAType type, bool isFree): type(type), isFree(isFree) {
 	start = NULL;
 }
 
+void FA::copyFrom(const FA &other) {
+    states.clear(); accept.clear();
+    type = other.type;
+    
+    // tmp variable to store the edge info
+    map <State*, size_t> mp; mp.clear();
+    vector<pair<string, pair<size_t, size_t> > > edges; edges.clear();
+    
+    // map the address to array index
+    for (size_t i = 0; i < other.states.size(); i++) mp[other.states[i]] = i;
+    
+    // copy the state from original FA
+    for (auto s: other.states){
+        State *tmp = new State(*s);
+        states.push_back(tmp);
+        if (tmp -> type == StateType::accept) accept.push_back(tmp);
+    }
+    start = states[mp[other.start]];
+    
+    // using the array index to collect edge info
+    for (auto s: other.states){
+        for (auto e: s -> trans) {
+            edges.push_back(make_pair(e.label, make_pair(mp[e.from], mp[e.to])));
+        }
+    }
+    
+    // rebuild all the edges
+    for (auto e: edges) {
+        State *from = states[e.second.first], *to = states[e.second.second];
+        string label = e.first;
+        (from -> trans).push_back(Edge(label, from, to));
+    }
+}
+
 FA::FA(const FA &other, bool isFree): isFree(isFree) {
-	states.clear(); accept.clear();
-	type = other.type;
-	start = other.start;
+    this -> copyFrom(other);
+}
 
-	// tmp variable to store the edge info
-	map <State*, size_t> mp; mp.clear();
-	vector<pair<string, pair<size_t, size_t> > > edges; edges.clear();
-
-	// map the address to array index
-	for (size_t i = 0; i < other.states.size(); i++) mp[other.states[i]] = i;
-
-	// copy the state from original FA
-	for (auto s: other.states){
-		State *tmp = new State(*s);
-		states.push_back(tmp);
-		if (tmp -> type == StateType::accept) accept.push_back(tmp);
-	}
-	start = other.start;
-
-	// using the array index to collect edge info
-	for (auto s: other.states){
-		for (auto e: s -> trans) {
-			edges.push_back(make_pair(e.label, make_pair(mp[e.from], mp[e.to])));
-		}
-	}
-
-	// rebuild all the edges
-	for (auto e: edges) {
-		State *from = states[e.second.first], *to = states[e.second.second];
-		string label = e.first;
-		(from -> trans).push_back(Edge(label, from, to));
-	}
+void FA::operator = (const FA &other) {
+    this -> isFree = false;
+    this -> copyFrom(other);
 }
 
 FA::~FA() {
@@ -133,7 +141,7 @@ void FA::extend(MyBitSet &st, State *s, string label) {
 			}
 		}
 	}
-
+    
 	st = st | tmp;
 }
 
@@ -170,7 +178,7 @@ FA FA::NtoD() {
 
 	// initial start state
 	MyBitSet s(states.size());
-	s.Set(mpa2i[start]); extend(s, start, ""); // get the initial state
+	extend(s, start, ""); // get the initial state
 	q.push(s);
 	dfa.start = new State(StateType::normal);
 	dfa.states.push_back(dfa.start);
@@ -181,7 +189,7 @@ FA FA::NtoD() {
 		MyBitSet tt = q.front(); q.pop();
 		set<string> pls; // possible label set
 		collectPossibleLabel(tt, pls);
-		for (auto label: pls) {
+		for (auto label: pls) if(label != "") {
 			MyBitSet nxtBS = transFromSet(tt, label);
 			if (!mp.count(nxtBS)) {
 				State *tmp = new State(StateType::normal);
@@ -215,6 +223,7 @@ FA FA::CharSetNFA(string chars) {
 	fa.states.push_back(fa.start);
 	State *acc = new State(StateType::accept);
 	fa.accept.push_back(acc);
+    fa.states.push_back(acc);
 
 	for (size_t i = 0; i < chars.length(); i++) {
 		(fa.start -> trans).push_back(Edge(string() + chars[i], fa.start, acc));

@@ -9,8 +9,8 @@ void printsub(string str, int begin, int end) {
 }
 
 void test() {
-	string rexp = "\\[ab\\]\\{2, 3\\}";
-	string text = "abcababcdefabababefacb";
+    string rexp = "\\[ab\\]\\{, \\} \\+ \\[c\\]\\{1, 1\\} \\| \\[c\\]\\{2, 2\\}";
+	string text = "abccababcdefabababefacb";
 	RegExp matcher(rexp);
 	auto ret = matcher.Match(text);
 	for (auto pr: ret) {

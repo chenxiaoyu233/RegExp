@@ -12,6 +12,15 @@ MyBitSet::MyBitSet(const MyBitSet &other) {
 	memcpy(field, other.field, sizeof(uint64_t) * WordNum);
 }
 
+void MyBitSet::operator = (const MyBitSet &other) {
+    if (WordNum != other.WordNum) {
+        WordNum = other.WordNum;
+        delete[] field;
+        field = new uint64_t[WordNum];
+    }
+    memcpy(field, other.field, sizeof(uint64_t) * WordNum);
+}
+
 MyBitSet::~MyBitSet() {
 	delete[] field;
  }
