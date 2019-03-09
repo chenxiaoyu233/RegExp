@@ -18,6 +18,10 @@ vector<pair<int, int> > RegExp::Match(string str){
 	return ret;
 }
 
+FA RegExp::DFA() {
+    return dfa;
+}
+
 int RegExp::matchAtPoint(string str, size_t point) {
 	int ret = point - 1;
 	State *cur = dfa.start;

@@ -32,6 +32,7 @@ private:
 public:
 	RegExp(string exp);
 	vector<pair<int, int> > Match(string str);
+    FA DFA();
 };
 
 #endif
