@@ -260,6 +260,13 @@ FA FA::EmptyStr() {
 	return fa;
 }
 
+FA FA::EmptySet() {
+    FA fa(FAType::NFA);
+    fa.start = new State(StateType::normal);
+    fa.states.push_back(fa.start);
+    return fa;
+}
+
 State* FA::Next(State* cur, string label) {
 	for (auto e: cur -> trans) if (e.label == label) {
 		return e.to;

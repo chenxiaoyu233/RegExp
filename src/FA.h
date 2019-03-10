@@ -40,6 +40,7 @@ public:
 	static FA CharSetNFA(string chars);
     static FA PureStringNFA(string str);
 	static FA EmptyStr();
+    static FA EmptySet();
 	FA operator + (const FA &other); // concat
 	FA operator | (const FA &other); // union
 	FA NtoD(); // convert NFA to DFA
