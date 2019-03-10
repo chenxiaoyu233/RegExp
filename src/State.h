@@ -10,11 +10,12 @@ class State {
 public:
 	StateType type;
 	vector<Edge> trans;
-    void *info; // point to outer data structure
+    vector<void*> info; // point to outer data structure
 	State(StateType type);
 	State(const State &other);
-    void SetInfo(void *_info);
-    void* GetInfo();
+    void SetInfo(vector<void*> _info);
+    void InfoPushBack(void* infoItem);
+    vector<void*> GetInfo();
 };
 
 #endif

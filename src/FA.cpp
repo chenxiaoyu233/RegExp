@@ -192,6 +192,16 @@ FA FA::NtoD() {
 	// bfs
 	while (!q.empty()) {
 		MyBitSet tt = q.front(); q.pop();
+        /* Debug
+        if (!mp.count(tt)) {
+            tt.Log(); fprintf(stderr, " tt == tt: %d, mp.count(tt): %d\n", tt == tt, mp.count(tt));
+            cerr << "WTF???" << endl;
+            for (auto p: mp) {
+                MyBitSet tmp = p.first;
+                tmp.Log(); fprintf(stderr, " tmp == tt: %d, mp.count(tmp): %d\n", tmp == tt, mp.count(tmp));
+            }
+            exit(234);
+        }*/
 		set<string> pls; // possible label set
 		collectPossibleLabel(tt, pls);
 		for (auto label: pls) if(label != "") {
@@ -218,7 +228,18 @@ FA FA::NtoD() {
 			dfa.accept.push_back(p.second);
 		}
 	}
+    
+    // collect the info vector
+    for (auto &p: mp) {
+        (p.second -> info).clear();
+        for (size_t i = 0; i < states.size(); i++) if (p.first[i]) {
+            for (auto it: states[i] -> info) {
+                (p.second -> info).push_back(it);
+            }
+        }
+    }
 	
+	dfa.type = FAType::DFA;
 	return dfa;
 }
 

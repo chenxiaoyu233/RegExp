@@ -21,6 +21,7 @@ public:
 	MyBitSet operator & (const MyBitSet &other);
 	void Set(size_t idx);
 	void Reset(size_t idx);
+    void Log();
 };
 
 #endif

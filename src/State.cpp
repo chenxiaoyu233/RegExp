@@ -3,6 +3,7 @@
 State::State(StateType type) {
 	this -> type = type;
 	trans.clear();
+    info.clear();
 }
 
 State::State(const State &other) {
@@ -11,10 +12,14 @@ State::State(const State &other) {
 	trans.clear();
 }
 
-void State::SetInfo(void *_info) {
+void State::SetInfo(vector<void*> _info) {
     info = _info;
 }
 
-void* State::GetInfo() {
+vector<void*> State::GetInfo() {
     return info;
+}
+
+void State::InfoPushBack(void *infoItem) {
+    info.push_back(infoItem);
 }

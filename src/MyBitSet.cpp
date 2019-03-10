@@ -31,9 +31,10 @@ bool MyBitSet::operator [] (size_t idx) const {
 
 bool MyBitSet::operator < (const MyBitSet &other) const {
 	for (size_t i = 0; i < WordNum; i++) {
-		if (field[i] < other.field[i]) {
-			return true;
-		}
+        if (field[i] != other.field[i]) {
+            if (field[i] < other.field[i]) return true;
+            else return false;
+        }
 	}
 	return false;
 }
@@ -67,4 +68,10 @@ void MyBitSet::Set(size_t idx) {
 
 void MyBitSet::Reset(size_t idx) {
 	field[idx >> 6] &= ~(1ul << (idx & mask));
+}
+
+void MyBitSet::Log() {
+    for (size_t i = 0; i < WordNum; i++) {
+        for (int j = 0; j < 64; j++) fprintf(stderr, "%llu", (field[i] >> j) & 1);
+    }
 }
