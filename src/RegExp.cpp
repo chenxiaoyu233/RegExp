@@ -11,7 +11,7 @@ RegExp::RegExp(string exp): exp(exp), dfa(FAType::DFA) {
 
 vector<pair<int, int> > RegExp::Match(string str){
 	vector<pair<int, int> > ret;
-	for (size_t i = 0; i < str.length(); i++) {
+	for (int i = 0; i < str.length(); i++) {
 		int cur = matchAtPoint(str, i);
 		if (cur >= i) ret.push_back(make_pair(i, cur));
 	}
@@ -184,7 +184,7 @@ FA RegExp::charSetExp () {
 }
 
 FA RegExp::stringExp() {
-	FA left(FAType::NFA);
+    string str = "";
 	bool inner = false;
 	while (pt + 1 < exp.length()) {
 		if (!inner && (exp[pt] == ' ' || exp[pt] == '\t' || exp[pt] == '\n')) {
@@ -192,7 +192,8 @@ FA RegExp::stringExp() {
 			pt += 2;
 			inner = true;
 		} else if (inner && (exp[pt] != '\\' && exp[pt+1] != '$')) {
-			left = left + FA::CharSetNFA(string() + exp[pt]);
+            str += exp[pt];
+            pt ++;
 		} else if (inner && (exp[pt] == '\\' && exp[pt+1] == '$')) {
 			pt += 2;
 			break;
@@ -201,5 +202,5 @@ FA RegExp::stringExp() {
 			exit(233);
 		}
 	}
-	return left;
+    return FA::PureStringNFA(str);
 }

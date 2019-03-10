@@ -38,6 +38,7 @@ public:
 	static FA Union(const FA &a, const FA &b);
 	static FA Closet(const FA &a);
 	static FA CharSetNFA(string chars);
+    static FA PureStringNFA(string str);
 	static FA EmptyStr();
 	FA operator + (const FA &other); // concat
 	FA operator | (const FA &other); // union

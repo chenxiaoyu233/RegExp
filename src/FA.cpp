@@ -232,6 +232,21 @@ FA FA::CharSetNFA(string chars) {
 	return fa;
 }
 
+FA FA::PureStringNFA(string str) {
+    FA fa(FAType::NFA);
+    fa.start = new State(StateType::normal);
+    fa.states.push_back(fa.start);
+    State *cur, *last = fa.start;
+    for (size_t i = 0; i < str.length(); i++) {
+        cur = new State(StateType::normal);
+        fa.states.push_back(cur);
+        (last -> trans).push_back(Edge(string() + str[i], last, cur));
+        if (i + 1 == str.length()) cur -> type = StateType::accept;
+        last = cur;
+    }
+    return fa;
+}
+
 FA FA::EmptyStr() {
 	FA fa(FAType::NFA);
 	fa.start = new State(StateType::accept);
