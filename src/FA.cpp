@@ -64,7 +64,7 @@ FA FA::operator | (const FA &other) {
 }
 
 FA FA::Concat(const FA &a, const FA &b) {
-	assert(a.type == FAType::NFA && b.type == FAType::NFA);
+	//assert(a.type == FAType::NFA && b.type == FAType::NFA);
 	FA at(a, false), bt(b, false), c(NFA);
 
 	// build new FA based on at and bt
@@ -79,11 +79,13 @@ FA FA::Concat(const FA &a, const FA &b) {
 	for (auto s: bt.accept) c.accept.push_back(s);
 	c.start = at.start;
 
+	c.type = FAType::NFA;
+
 	return c;
 }
 
 FA FA::Union(const FA &a, const FA &b) {
-	assert(a.type == FAType::NFA && b.type == FAType::NFA);
+	//assert(a.type == FAType::NFA && b.type == FAType::NFA);
 	FA at(a, false), bt(b, false), c(NFA);
 
 	// build new FA based on at, bt and c
@@ -98,11 +100,13 @@ FA FA::Union(const FA &a, const FA &b) {
 	for (auto s: at.accept) c.accept.push_back(s);
 	for (auto s: bt.accept) c.accept.push_back(s);
 
+	c.type = FAType::NFA;
+
 	return c;
 }
 
 FA FA::Closet(const FA &a) {
-	assert(a.type == FAType::NFA);
+	//assert(a.type == FAType::NFA);
 	FA c(a, false);
 
 	// build new FA based on c
@@ -114,6 +118,8 @@ FA FA::Closet(const FA &a) {
 	}
 	c.accept.push_back(st);
 	c.start = st;
+
+	c.type = FAType::NFA;
 
 	return c;
 }
