@@ -10,8 +10,11 @@
 //               <RegExp2>
 // <RegExp2> ::= <CharSetExp> "\{" <RangeExp> "\}" |
 //               <RegExp3> "\{" <RangeExp> "\}" |
+//               <StringExp> "\{" <RangeExp> "\}" |
+//               <StringExp> |
 //               <CharSetExp> |
 //               <RegExp3>
+// <StringExp> ::= "\$" a string "\$"
 // <RangeExp> ::= <Num> ", " | ", " <Num> | <Num> ", " <Num>
 // <CharSetExp> ::= "\[" <Chars> "\]"
 // <RegExp3> ::= "\(" <RegExp1> "\)"
@@ -28,6 +31,7 @@ private:
 	pair<int, int> rangeExp();
 	int numExp();
 	FA charSetExp();
+	FA stringExp();
 	int matchAtPoint(string str, size_t point);
 public:
 	RegExp(string exp);

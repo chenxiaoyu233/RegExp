@@ -1,7 +1,7 @@
 #include "RegExp.h"
 
 #define HandleSpace \
-else if (exp[pt] == ' ' || exp[pt] == '	' || exp[pt] == '\n') { pt++; }
+	else if (exp[pt] == ' ' || exp[pt] == '\t' || exp[pt] == '\n') { pt++; }
 	
 RegExp::RegExp(string exp): exp(exp), dfa(FAType::DFA) {
 	pt = 0;
@@ -72,8 +72,11 @@ FA RegExp::regExp2() {
 		} else if (!lFlag && exp[pt] == '\\' && exp[pt+1] == '[') {
 			lFlag = true;
 			left = charSetExp();
+		} else if (!lFlag && exp[pt] == '\\' && exp[pt+1] == '$') {
+			lFlag = true;
+			left = stringExp();
 		} else if (!rFlag && exp[pt] == '\\' && exp[pt+1] == '{') {
-            pt += 2;
+			pt += 2;
 			rFlag = true;
 			right = rangeExp();
 		} else if (lFlag && rFlag && exp[pt] == '\\' && exp[pt+1] == '}') {
@@ -92,7 +95,10 @@ FA RegExp::regExp2() {
 				}
 				return ret;
 			}
-		} HandleSpace else {
+		} HandleSpace
+		else if (lFlag) {
+			break;
+		} else {
 			fprintf(stderr, "wrong syntax\n");
 			exit(233);
 		}
@@ -158,7 +164,8 @@ FA RegExp::charSetExp () {
 	string str = "";
 	bool inner = false;
 	while( pt + 1 < exp.length() ) {
-		if (!inner && (exp[pt] == ' ' || exp[pt] == '	' || exp[pt] == '\n')) {
+		if (!inner && (exp[pt] == ' ' || exp[pt] == '\t' || exp[pt] == '\n')) {
+			pt++;
 		} else if (!inner && exp[pt] == '\\' & exp[pt+1] == '[') {
 			inner = true;
 			pt += 2;
@@ -174,4 +181,25 @@ FA RegExp::charSetExp () {
 		}
 	}
     return FA::CharSetNFA(str);
+}
+
+FA RegExp::stringExp() {
+	FA left(FAType::NFA);
+	bool inner = false;
+	while (pt + 1 < exp.length()) {
+		if (!inner && (exp[pt] == ' ' || exp[pt] == '\t' || exp[pt] == '\n')) {
+		} else if (!inner && exp[pt] == '\\' && exp[pt+1] == '$') {
+			pt += 2;
+			inner = true;
+		} else if (inner && (exp[pt] != '\\' && exp[pt+1] != '$')) {
+			left = left + FA::CharSetNFA(string() + exp[pt]);
+		} else if (inner && (exp[pt] == '\\' && exp[pt+1] == '$')) {
+			pt += 2;
+			break;
+		} else {
+			fprintf(stderr, "wrong syntax\n");
+			exit(233);
+		}
+	}
+	return left;
 }
