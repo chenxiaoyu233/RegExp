@@ -9,8 +9,8 @@ void printsub(string str, int begin, int end) {
 }
 
 void test() {
-    string rexp = "\\$ab\\$\\{2, 2\\}";
-	string text = "abccababcdefabababefacb";
+    string rexp = "\\[ \t\n\\]\\{, \\}";
+	string text = "abccababcdefabababe\t\nfacb";
 	RegExp matcher(rexp);
 	auto ret = matcher.Match(text);
 	for (auto pr: ret) {

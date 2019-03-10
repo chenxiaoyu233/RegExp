@@ -77,7 +77,7 @@ FA FA::Concat(const FA &a, const FA &b) {
 	for (auto s: at.states) c.states.push_back(s);
 	for (auto s: bt.states) c.states.push_back(s);
 	for (auto s: bt.accept) c.accept.push_back(s);
-	c.start = a.start;
+	c.start = at.start;
 
 	return c;
 }
@@ -106,14 +106,13 @@ FA FA::Closet(const FA &a) {
 	FA c(a, false);
 
 	// build new FA based on c
-	State *st = new State(StateType::normal);
+	State *st = new State(StateType::accept);
 	c.states.push_back(st);
 	(st -> trans).push_back(Edge("", st, c.start));
-	c.start -> type = StateType::accept;
 	for (auto s: c.accept) {
 		(s -> trans).push_back(Edge("", s, c.start));
 	}
-	c.accept.push_back(c.start);
+	c.accept.push_back(st);
 	c.start = st;
 
 	return c;
