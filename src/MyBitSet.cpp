@@ -1,24 +1,24 @@
 #include "MyBitSet.h"
 
 MyBitSet::MyBitSet(size_t BitNum) {
-	WordNum = (BitNum >> 6) + ((BitNum & mask) > 0) ;
-	field = new uint64_t[WordNum];
-	memset(field, 0, sizeof(uint64_t) * WordNum);
+	WordNum = (BitNum >> 5) + ((BitNum & mask) > 0) ;
+	field = new uint32_t[WordNum];
+	memset(field, 0, sizeof(uint32_t) * WordNum);
 }
 
 MyBitSet::MyBitSet(const MyBitSet &other) {
 	WordNum = other.WordNum;
-	field = new uint64_t[WordNum];
-	memcpy(field, other.field, sizeof(uint64_t) * WordNum);
+	field = new uint32_t[WordNum];
+	memcpy(field, other.field, sizeof(uint32_t) * WordNum);
 }
 
 void MyBitSet::operator = (const MyBitSet &other) {
     if (WordNum != other.WordNum) {
         WordNum = other.WordNum;
         delete[] field;
-        field = new uint64_t[WordNum];
+        field = new uint32_t[WordNum];
     }
-    memcpy(field, other.field, sizeof(uint64_t) * WordNum);
+    memcpy(field, other.field, sizeof(uint32_t) * WordNum);
 }
 
 MyBitSet::~MyBitSet() {
@@ -26,7 +26,7 @@ MyBitSet::~MyBitSet() {
  }
 
 bool MyBitSet::operator [] (size_t idx) const {
-	return (field[idx >> 6] >> (idx & mask)) & 1;
+	return (field[idx >> 5] >> (idx & mask)) & 1;
 }
 
 bool MyBitSet::operator < (const MyBitSet &other) const {
@@ -63,15 +63,15 @@ MyBitSet MyBitSet::operator & (const MyBitSet &other) {
 }
 
 void MyBitSet::Set(size_t idx) {
-	field[idx >> 6] |= (1ul << (idx & mask));
+	field[idx >> 5] |= (1ul << (idx & mask));
 }
 
 void MyBitSet::Reset(size_t idx) {
-	field[idx >> 6] &= ~(1ul << (idx & mask));
+	field[idx >> 5] &= ~(1ul << (idx & mask));
 }
 
 void MyBitSet::Log() {
     for (size_t i = 0; i < WordNum; i++) {
-        for (int j = 0; j < 64; j++) fprintf(stderr, "%llu", (field[i] >> j) & 1);
+        for (int j = 0; j < 32; j++) fprintf(stderr, "%u", (field[i] >> j) & 1);
     }
 }

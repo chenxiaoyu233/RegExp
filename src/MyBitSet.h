@@ -7,8 +7,10 @@ class MyBitSet {
 public:
 //private:
 	size_t WordNum;
-	uint64_t *field;
-	const static uint64_t mask = 63;
+	//uint64_t *field;
+	//const static uint64_t mask = 63;
+    uint32_t *field;
+    const static uint32_t mask = 31;
 public:
 	MyBitSet(size_t BitNum);
 	MyBitSet(const MyBitSet& other);
