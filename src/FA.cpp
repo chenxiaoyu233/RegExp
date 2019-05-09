@@ -306,7 +306,11 @@ void FA::logState() {
 
 void FA::logEdge(State* s) {
     for (auto e: s -> trans) {
-        fprintf(stderr, "%lu -> %lu [ label = \"\\\"%s\\\"\" ];\n", mpa2i[e.from], mpa2i[e.to], e.label.c_str());
+        string tmp = e.label;
+        if (tmp == "\n") tmp = "\\\\n";
+        else if (tmp == "\t") tmp = "\\\\t";
+        else if (tmp == " ") tmp = "<space>";
+        fprintf(stderr, "%lu -> %lu [ label = \"\\\"%s\\\"\" ];\n", mpa2i[e.from], mpa2i[e.to], tmp.c_str());
     }
 }
 
