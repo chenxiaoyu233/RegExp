@@ -294,3 +294,26 @@ State* FA::Next(State* cur, string label) {
 	}
 	return NULL;
 }
+
+void FA::logState() {
+    for (auto s: states) {
+        fprintf(stderr, "%d;\n", mpa2i[s]);
+    }
+    for (auto s: accept) {
+        fprintf(stderr, "%d [shape = doublecircle];\n", mpa2i[s]);
+    }
+}
+
+void FA::logEdge(State* s) {
+    for (auto e: s -> trans) {
+        fprintf(stderr, "%d -> %d [ label = \"%s\" ];\n", mpa2i[e.from], mpa2i[e.to], e.label.c_str());
+    }
+}
+
+void FA::Log() {
+    genMapFromAddressToIndex();
+    fprintf(stderr, "digraph G {\n");
+    logState();
+    for (auto s: states) logEdge(s);
+    fprintf(stderr, "}\n");
+}

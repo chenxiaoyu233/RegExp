@@ -45,6 +45,9 @@ public:
 	FA operator | (const FA &other); // union
 	FA NtoD(); // convert NFA to DFA
 	State* Next(State* cur, string label);
+    void logState();
+    void logEdge(State *s);
+    void Log();
 };
 
 #endif
