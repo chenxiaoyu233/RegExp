@@ -297,16 +297,16 @@ State* FA::Next(State* cur, string label) {
 
 void FA::logState() {
     for (auto s: states) {
-        fprintf(stderr, "%d;\n", mpa2i[s]);
+        fprintf(stderr, "%lu;\n", mpa2i[s]);
     }
     for (auto s: accept) {
-        fprintf(stderr, "%d [shape = doublecircle];\n", mpa2i[s]);
+        fprintf(stderr, "%lu [shape = doublecircle];\n", mpa2i[s]);
     }
 }
 
 void FA::logEdge(State* s) {
     for (auto e: s -> trans) {
-        fprintf(stderr, "%d -> %d [ label = \"%s\" ];\n", mpa2i[e.from], mpa2i[e.to], e.label.c_str());
+        fprintf(stderr, "%lu -> %lu [ label = \"\\\"%s\\\"\" ];\n", mpa2i[e.from], mpa2i[e.to], e.label.c_str());
     }
 }
 
